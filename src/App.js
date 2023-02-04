@@ -1,10 +1,11 @@
 import './App.css';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 function App() {
 
   const canvasRef = useRef(null);
   const contextRef = useRef(null);
+  const [isDrawing, setIsDrawing] = useState(false)
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -21,23 +22,33 @@ function App() {
     contextRef.current = context;
   }, [])
 
-  const startDrawing = () => {
-
+  const startDrawing = ({nativeEvent}) => {
+    const {offsetX, offsetY} = nativeEvent;
+    contextRef.current.beginPath()
+    contextRef.current.moveTo(offsetX, offsetY)
+    setIsDrawing(true)
   }
 
   const finishDrawing = () => {
-
+    contextRef.current.closePath()
+    setIsDrawing(false)
   }
 
-  const draw = () => {
-
-  }
+  const draw = ({nativeEvent}) => {
+    if (!isDrawing) {
+      return
+    }
+    const {offsetX, offsetY} = nativeEvent;
+    contextRef.current.lineTo(offsetX, offsetY)
+    contextRef.current.stroke()
+  } 
 
   return (
     <div className="App">
       <canvas 
         onMouseDown={startDrawing}
         onMouseUp={finishDrawing}
+        onMouseMove={draw}
         ref={canvasRef}
       />
     </div>
