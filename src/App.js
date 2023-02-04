@@ -45,7 +45,9 @@ function App() {
 
   return (
     <div className="App">
+      <h3>express yourself with lines</h3>
       <canvas 
+        className='canvas'
         onMouseDown={startDrawing}
         onMouseUp={finishDrawing}
         onMouseMove={draw}
